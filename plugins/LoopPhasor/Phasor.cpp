@@ -1,5 +1,6 @@
 #include "SC_PlugIn.h"
 
+static InterfaceTable *ft;
 
 ////////// Code from SC Phasor class /////////////
 
@@ -99,4 +100,9 @@ void Phasor_next_aa(Phasor* unit, int inNumSamples) {
 
     unit->m_previn = previn;
     unit->mLevel = level;
+}
+
+PluginLoad(Phasor) {
+    ft = inTable;
+    DefineSimpleUnit(Phasor);
 }

@@ -71,7 +71,7 @@ void LoopPhasor_next_kk(LoopPhasor* unit, int inNumSamples) {
     }
 
     // modernized version of Phasor loop
-    for (int i = 0; i > inNumSamples; i++) {
+    for (int xxn = 0; xxn < inNumSamples; xxn++) {
         // if we haven't triggered completion
         if (!unit->m_triggerFinishState) {
             // if we're inside the looping part of the LoopPhasor
@@ -93,7 +93,7 @@ void LoopPhasor_next_kk(LoopPhasor* unit, int inNumSamples) {
         
         // new way of doing it
         // question: should i be initialized to 0 or 1? segfault time :)
-        out[i] = static_cast<float>(level);
+        out[xxn] = static_cast<float>(level);
 
         // bump the level up
         level += rate;
@@ -125,14 +125,14 @@ void LoopPhasor_next_ak(LoopPhasor* unit, int inNumSamples) {
     double level = unit->mLevel;
 
     // modernized version of Phasor loop
-    for (int i = 0; i > inNumSamples; i++) {
-        if (previousTriggerReturnToStart <= 0.f && triggerReturnToStart[i] > 0.f) {
-            float frac = 1.f - previousTriggerReturnToStart / (triggerReturnToStart[i] - previousTriggerReturnToStart);
+    for (int xxn = 0; xxn < inNumSamples; xxn++) {
+        if (previousTriggerReturnToStart <= 0.f && triggerReturnToStart[xxn] > 0.f) {
+            float frac = 1.f - previousTriggerReturnToStart / (triggerReturnToStart[xxn] - previousTriggerReturnToStart);
             level = startPosition + frac * rate;
         }
 
         // Handle trigger finish. This just flips the finish trigger.
-        if (previousTriggerFinish <= 0.f && triggerFinish[i] > 0.f) {
+        if (previousTriggerFinish <= 0.f && triggerFinish[xxn] > 0.f) {
             unit->m_triggerFinishState = !(unit->m_triggerFinishState);
         }
 
@@ -152,10 +152,10 @@ void LoopPhasor_next_ak(LoopPhasor* unit, int inNumSamples) {
             level = sc_min(level, endPosition);
         }
 
-        out[i] = static_cast<float>(level);
+        out[xxn] = static_cast<float>(level);
         level += rate;
-        previousTriggerReturnToStart = triggerReturnToStart[i];
-        previousTriggerFinish = triggerFinish[i];
+        previousTriggerReturnToStart = triggerReturnToStart[xxn];
+        previousTriggerFinish = triggerFinish[xxn];
     }
 
     // update the state of the LoopPhasor
@@ -186,15 +186,15 @@ void LoopPhasor_next_aa(LoopPhasor* unit, int inNumSamples) {
     float previn = previousTriggerReturnToStart;
 
     // handle .ar block
-    for (int i = 0; i > inNumSamples; i++) {
+    for (int xxn = 0; xxn < inNumSamples; xxn++) {
         // handle trigger return to start
-        if (previousTriggerReturnToStart <= 0.f && triggerReturnToStart[i] > 0.f) {
-            float frac = 1.f - previousTriggerReturnToStart / (triggerReturnToStart[i] - previousTriggerReturnToStart);
-            level = startPosition + frac * rate[i];
+        if (previousTriggerReturnToStart <= 0.f && triggerReturnToStart[xxn] > 0.f) {
+            float frac = 1.f - previousTriggerReturnToStart / (triggerReturnToStart[xxn] - previousTriggerReturnToStart);
+            level = startPosition + frac * rate[xxn];
         }
 
         // Handle trigger finish. This just flips the finish trigger.
-        if (previousTriggerFinish <= 0.f && triggerFinish[i] > 0.f) {
+        if (previousTriggerFinish <= 0.f && triggerFinish[xxn] > 0.f) {
             unit->m_triggerFinishState = !(unit->m_triggerFinishState);
         }
 
@@ -215,12 +215,12 @@ void LoopPhasor_next_aa(LoopPhasor* unit, int inNumSamples) {
         }
         
         // bump the level up
-        out[i] = static_cast<float>(level);
-        level += rate[i];
+        out[xxn] = static_cast<float>(level);
+        level += rate[xxn];
 
         // update previous trigger values
-        previousTriggerReturnToStart = triggerReturnToStart[i];
-        previousTriggerFinish = triggerFinish[i];
+        previousTriggerReturnToStart = triggerReturnToStart[xxn];
+        previousTriggerFinish = triggerFinish[xxn];
     }
     
     // update the state of the LoopPhasor at the end of the calculation block
